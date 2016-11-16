@@ -1,0 +1,39 @@
+<style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,600');
+h1,h2,h3,h4,h5,h6,p {
+font-family : 'Montserrat' !important;
+line-height: 1.6em !important;
+margin: 5px auto !important;
+padding-top: 5px !important;
+font-weight: 700 !important;
+color: #003366 !important;
+}
+ul li {
+font-family : Roboto !important;
+line-height: 1.4em !important;
+font-size: 1.1em !important;
+font-weight: 400 !important;
+color: #333 !important;
+padding-top: 10px !important;
+}
+img {
+margin-top: 5px !important;
+margin-right: 5px  !important;
+max-width: 100% !important;
+max-height: 100% !important;
+width: 150px !important;
+height: 100%;
+box-shadow: 0 0 0 !important;
+border-style: none !important;
+}
+.state-background {
+padding: 10px !important;
+margin: 10px !important;
+background-image: url(kulogo.png) !important;
+background-repeat: no-repeat !important;
+}
+ul li ul li {
+font-size: .9em !important;
+}
+</style>

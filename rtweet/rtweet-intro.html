@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>rtweet: Collecting Twitter data</title>
+  <meta name="description" content="">
+  <meta name="author" content="Michael W. Kearney">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="./frameworks/revealjs/css/reveal.min.css">
+  <link rel="stylesheet" href="./frameworks/revealjs/css/theme/simple.css" id="theme">
+  <link rel="stylesheet" href="./highlighters/highlight.js/css/tomorrow.css" id="theme">
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->  
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section class='' data-state='' id='slide-1'>
+  
+  <style>
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+h2 {
+line-height: 1.5em !important;
+}
+h4, h5 {
+color: #222 !important;
+font-weight: 400 !important;
+}
+code {
+font-family: Inconsolata !important;
+font-size: 20pt !important;
+line-height: 1.5em !important;
+}
+</style>
+
+<h2>rtweet: Collecting Twitter Data</h2>
+
+<h4>Michael W. Kearney</h4>
+
+<h5>Center for Research Methods &amp; Data Analysis</h5>
+
+<h5>University of Kansas</h5>
+
+</section>
+<section class='' data-state='' id='slide-2'>
+  
+  <p><section></p>
+
+<h2>Twitter APIs</h2>
+
+<ul>
+<li>Limited (lots of money) use
+
+<ul>
+<li><strong>Firehose</strong> API (firehose.twitter.com)</li>
+</ul></li>
+<li>Publicly available
+
+<ul>
+<li><strong>REST</strong> API (api.twitter.com)</li>
+<li><strong>Stream</strong> API (stream.twitter.com)</li>
+</ul></li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-3'>
+  <h2>REST API</h2>
+  <ul>
+<li>Archived collection of tweets and users data</li>
+<li>Search queries extend 7-10 days max</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-4'>
+  <h2>Stream API</h2>
+  <ul>
+<li>Three different ways to access the stream API</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-5'>
+  <h2>Sample</h2>
+  <ol>
+<li>Randomly samples about 5% (I think) of tweets</li>
+</ol>
+
+<pre><code class="r">rt &lt;- stream_tweets(q = &quot;&quot;)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-6'>
+  <h2>Filter</h2>
+  <ol>
+<li>Streams all tweets using keyword filter(s)</li>
+</ol>
+
+<pre><code class="r">rt &lt;- stream_tweets(q = &quot;yolo,rstats&quot;)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-7'>
+  <h2>Tracking</h2>
+  <ol>
+<li>Streams all tweets from and mentioning users</li>
+</ol>
+
+<pre><code class="r">rt &lt;- stream_tweets(q = &quot;hillaryclinton,realdonaldtrump&quot;)
+</code></pre>
+
+<p></section></p>
+
+</section>
+<section class='' data-state='' id='slide-8'>
+  
+  <p><section></p>
+
+<h2>Firehose for free I</h2>
+
+<ol>
+<li>Firehose via <code>search_tweets()</code></li>
+</ol>
+
+<pre><code class="r">search_firehose &lt;- paste0(letters, collapse = &quot; OR &quot;)
+search_firehose
+</code></pre>
+
+<pre><code>## [1] &quot;a OR b OR c OR d OR e OR f OR g OR h OR i OR j OR k OR l OR m OR n OR o OR p OR q OR r OR s OR t OR u OR v OR w OR x OR y OR z&quot;
+</code></pre>
+
+<pre><code class="r">rt &lt;- stream_tweets(q = search_firehose)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-9'>
+  <h2>Firehose for free II</h2>
+  <ol>
+<li>Firehose via <code>stream_tweets()</code></li>
+</ol>
+
+<pre><code class="r">stream_firehose &lt;- paste0(letters, collapse = &quot;,&quot;)
+stream_firehose
+</code></pre>
+
+<pre><code>## [1] &quot;a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z&quot;
+</code></pre>
+
+<pre><code class="r">rt &lt;- stream_tweets(q = stream_firehose)
+</code></pre>
+
+<p></section></p>
+
+</section>
+<section class='' data-state='' id='slide-10'>
+  <h2>search_tweets() args</h2>
+  <ul>
+<li><strong>q</strong>: Search query with boolean syntax</li>
+<li><strong>include_rts</strong>: Filter out retweets</li>
+<li><strong>type</strong>: Search for <code>&quot;popular&quot;</code>, <code>&quot;recent&quot;</code>, <code>&quot;mixed&quot;</code></li>
+</ul>
+
+<pre><code class="r">rt &lt;- search_tweets(q = &quot;rstats OR statistics OR \&quot;data science\&quot;&quot;,
+    include_rts = FALSE, type = &quot;recent&quot;)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-11'>
+  <h2>stream_tweets() args</h2>
+  <ul>
+<li><strong>q</strong>: Stream query to use any of 3 methods</li>
+<li><strong>timeout</strong>: Length of time for stream (in seconds)</li>
+<li><strong>file_name</strong>: Name to save file. If NULL (default) a tmp file is created and deleted</li>
+<li><strong>parse</strong>: Locial indicating whether to parse into tidy data frame</li>
+</ul>
+
+<pre><code class="r">rt &lt;- stream_tweets(q = &quot;rstats,statistics,hadley&quot;,
+    timeout = 60 * 10, file_name = &quot;rstats.json&quot;, parse = TRUE)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-12'>
+  <h2>The end</h2>
+  <ul>
+<li>That&#39;s it!</li>
+</ul>
+
+</section>
+    </div>
+  </div>
+</body>
+  <script src="./frameworks/revealjs/lib/js/head.min.js"></script>
+  <script src="./frameworks/revealjs/js/reveal.min.js"></script>
+  <script>
+  // Full list of configuration options available here:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    theme: Reveal.getQueryHash().theme || 'simple', 
+    transition: Reveal.getQueryHash().transition || 'linear', 
+    dependencies: [
+    // Cross-browser shim that fully implements classList -
+    // https://github.com/eligrey/classList.js/
+      { src: './frameworks/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList;}},
+      // Zoom in and out with Alt+click
+      { src: './frameworks/revealjs/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      // Speaker notes
+      { src: './frameworks/revealjs/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+      // Remote control your reveal.js presentation using a touch device
+      //{ src: './frameworks/revealjs/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+  });
+  </script>  <!-- LOAD HIGHLIGHTER JS FILES -->
+<script src="./highlighters/highlight.js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!-- DONE LOADING HIGHLIGHTER JS FILES -->
+ 
+
+</html>
